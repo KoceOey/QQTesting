@@ -52,6 +52,7 @@ describe('login function', () => {
     };
   });
 
+  // T1.1
   it('should successfully log in with admin credentials', async () => {
     req.body.email = 'suep@gmail.com';
     req.body.password = 'suep123';
@@ -72,6 +73,7 @@ describe('login function', () => {
     });
   });
 
+  // T1.2
   it('should successfully log in with agent credentials', async () => {
     req.body.email = 'asep@gmail.com';
     req.body.password = 'asep123';
@@ -92,6 +94,7 @@ describe('login function', () => {
     });
   });
 
+  // T1.3
   it('should return 401 if email is not found', async () => {
     req.body.email = 'invalid@gmail.com';
     req.body.password = 'adminpassword';
@@ -104,6 +107,7 @@ describe('login function', () => {
     });
   });
 
+  // T1.4
   it('should return 401 if password is incorrect', async () => {
     req.body.email = 'suep@gmail.com';
     req.body.password = 'invalidpassword';

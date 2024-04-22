@@ -9,7 +9,7 @@ async function login(req, res) {
     try {
         const pool = await connectToMySQL();
 
-        const results = await pool.query('SELECT * FROM employee WHERE email = ?', [email]);
+        const [results] = await pool.query('SELECT * FROM employee WHERE email = ?', [email]);
         
         if (results[0] !== undefined) {
             const employee = results[0];

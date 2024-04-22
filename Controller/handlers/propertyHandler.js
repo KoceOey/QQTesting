@@ -64,7 +64,7 @@ async function addPropertyHandler(req, res) {
     const stat = 0;
 
     try {
-        const db = await connectToMongoDB.Get();
+        const db = await connectToMongoDB();
         const uniqueFolderName = `${type}/${propertyId}/`;
 
         for (let i = 0; i < files.length; i++) {
@@ -131,7 +131,7 @@ async function getPropertyHandler(req, res) {
     } = req.body;
     let query = {};
     try {
-        const db = await connectToMongoDB.Get();
+        const db = await connectToMongoDB();
         // check id filter
         if (id !== undefined) {
             query.id = id;
@@ -243,11 +243,18 @@ async function setStatusPropertyHandler(req, res) {
     const month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
     const year = currentDate.getFullYear();
     try {
-        const db = await connectToMongoDB.Get();
+        const db = await connectToMongoDB();
         const filter = { id: propertyId };
+        // Check if the property exists before updating it
+        const existingProperty = await db.collection('property').findOne(filter);
+        if (!existingProperty) {
+            res.json({ status: 404, message: 'Error: Property not found' });
+            return;
+        }
         if (method === 'PUT') { // admin accept property
             if(!checkUserType(authHeader, 0)){
-                throw new Error("Invalid Credentials!!");
+                res.json({ status: 401, message: 'Error: Invalid credentials' });
+                return;
             }
             updateDoc = {
                 $set: {
@@ -259,11 +266,12 @@ async function setStatusPropertyHandler(req, res) {
             if(!result){
                 console.log('property not updated');
             }
-            res.status(200).json({ status: 200, message: 'Property berhasil diapprove' });
+            res.json({ status: 200, message: 'Property berhasil diapprove' });
             addLog(req, employeeId, 1, "approve property");
         } else { // agent sold property
             if(!checkUserType(authHeader, 1)){
-                throw new Error("Invalid Credentials!!");
+                res.json({ status: 401, message: 'Error: Invalid credentials' });
+                return;
             }
             updateDoc = {
                 $set: {
@@ -272,12 +280,12 @@ async function setStatusPropertyHandler(req, res) {
             };
             const result = await db.collection('property').updateOne(filter, updateDoc);
             console.log(filter);
-            res.status(200).json({ status: 200, message: 'Property sold' });
+            res.json({ status: 200, message: 'Property sold' });
             addLog(req, employeeId, 1, "delist property");
         }
     } catch (error) {
         addLog(req, employeeId, 0, "update property");
-        res.status(500).json({ error: error.message });
+        res.json({ error: error.message });
     }
 }
 
