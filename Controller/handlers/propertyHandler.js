@@ -104,7 +104,8 @@ async function addPropertyHandler(req, res) {
             status: 201, 
             message: 'Successfully add property listing request', 
             uploadedFiles,
-            agentId: agent
+            agentId: agent,
+            propertyId: propertyData.id
         });
         addLog(req, agent, 1, "add property");
     } catch (error) {
