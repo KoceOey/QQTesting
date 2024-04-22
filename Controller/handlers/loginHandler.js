@@ -10,11 +10,8 @@ async function login(req, res) {
         const pool = await connectToMySQL();
 
         const [results] = await pool.query('SELECT * FROM employee WHERE email = ?', [email]);
-        console.log(results)
         if (results[0] !== undefined) {
             const employee = results[0];
-            console.log(employee.password);
-            console.log(employee.name)
             const passwordMatch = await bcrypt.compare(password, employee.password);
 
             if (passwordMatch) {
