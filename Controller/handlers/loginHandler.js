@@ -38,7 +38,7 @@ async function login(req, res) {
             }
         } else {
             // no email found
-            res.json({ status: 401, message: 'Error: Invalid credentials' });
+            res.json({ status: 404, message: 'Error: Invalid credentials' });
         }
     } catch (error) {
         console.error('Error during login:', error);
