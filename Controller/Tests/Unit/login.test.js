@@ -12,7 +12,6 @@ describe('Integration Tests', () => {
         password: 'suep123'
       })
 
-    console.log(res.header['authorization'])
     expect(res.statusCode).toBe(200)
     expect(res.body.result.type).toBe(0)
   })
@@ -26,7 +25,6 @@ describe('Integration Tests', () => {
         password: 'asep123'
       })
 
-    console.log(res.header['authorization'])
     expect(res.statusCode).toBe(200)
     expect(res.body.result.type).toBe(1)
   })
